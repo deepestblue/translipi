@@ -36,12 +36,13 @@
     <!--<b><span  style="font-style: italic">trans</span><span lipi=1>lipi</span></b>-->
      <form id="frmTranslipi">
      <select id="cbScriptChoice" onchange=handleLipiChange()>
-        <option value="sa">Devanagari
-        <option value="kn">Kannada
-        <option value="ml">Malayalam
-        <option value="en" selected>Roman
-        <option value="ta">Tamil
-        <option value="te">Telugu
+        <option value="deva">Devanagari
+        <option value="gran">Grantha
+        <option value="knda">Kannada
+        <option value="mlym">Malayalam
+        <option value="latn" selected>Roman
+        <option value="taml">Tamil
+        <option value="telu">Telugu
     </select>
     </form>
      ]]>

@@ -1,4 +1,4 @@
-LIPI_DEFAULT = "en";
+LIPI_DEFAULT = “latn“;
 LIPI_COOKIE = "lipiChosen";
 LIPI_EXPIRY = 30 * 24 * 3600 * 1000;  // 30 days
 
@@ -78,6 +78,22 @@ var devanagari = {
     "k": "क", "kh": "ख", "m": "म", "l": "ल", "o": "ऒ", "n": "न",
     "p": "प", "s": "स", "r": "र", "u": "उ", "t": "त", "nN": "न",
     "v": "व", "y": "य", "au": "औ", "z": "श", "|": "।"
+};
+
+var grantha = {
+    "O$": “𑍋”, "ch": “𑌛”, "jh": “𑌝”, "ai": “𑌐”, "||": "॥",
+    "j": “𑌜”, "lRR$": “𑍣”, "'": "𑌽", "lRR": "𑍡", "lR": “𑌌”, "Th": “𑌠”,
+    "U$": "𑍂", "A$": "𑌾", "gh": “𑌘”, "bh": “𑌭”, "dh": “𑌧”,
+    "RR": “”, "E$": "𑍇", "th": “𑌥”, "u$": "𑍁",
+    "ph": “𑌫”, "I$": "𑍀", "A": “𑌆”, "RR$": "𑍄", "E": “𑌏”, "D": “𑌡”,
+    "G": “𑌙”, "I": “𑌈”, "H": “𑌃”, "J": “𑌞”, "M": “𑌂”,
+    "L": “𑌳”, "O": “𑌓”, "N": “𑌣”, "R$": "𑍃", "S": “𑌷”, "R": “𑌋”,
+    "U": “𑌊”, "T": “𑌟”, "ai$": "𑍈", "V$": "", "w": “𑌵”, "lR$": "𑍢",
+    "i$": "𑌿", "au$": "𑍌", "d": “𑌦”, "a": “𑌅”, "c": “𑌚”, "b": “𑌬”,
+    "Dh": “𑌢”, "g": “𑌗”, "i": “𑌇”, "h": “𑌹”,
+    "k": “𑌕”, "kh": “𑌖”, "m": “𑌮”, "l": “𑌲”, "n": “𑌨”,
+    "p": “𑌪”, "s": “𑌸”, "r": “𑌰”, "u": “𑌉”, "t": “𑌤”,
+    "v": “𑌵”, "y": “𑌯”, "au": “𑌔”, "z": “𑌶”, "|": "।"
 };
 
 var telugu = {
@@ -171,12 +187,13 @@ var tamil = {
 
 
 var scripts = {
-    "sa" : devanagari,
-    "en" : roman,
-    "kn" : kannada,
-    "ml" : malayalam,
-    "ta" : tamil,
-    "te" : telugu
+    “deva” : devanagari,
+    “gran” : grantha,
+    “latn” : roman,
+    "knda” : kannada,
+    "mlym” : malayalam,
+    "taml” : tamil,
+    "telu” : telugu
 };
 
 function isConsonant(str) {
@@ -214,7 +231,7 @@ function nasalToAnuswara(input) {
     return input.replace(reNasals, "M");
 }
 var preproc = {
-    "ta": function (input) {
+    "taml”: function (input) {
         var reAlveolarN = /\Bn(?=[^tdN])/gm
         input = input.replace(reAlveolarN, "nN");
         var reAlveolarN2 = /\Bn(?=nN)/gm
@@ -229,9 +246,9 @@ var preproc = {
         input = input.replace(reNasaln, "n");
         return input;
     },
-    "te": nasalToAnuswara,
-    "kn": nasalToAnuswara,
-    "ml": function (input) {
+    "telu”: nasalToAnuswara,
+    "knda”: nasalToAnuswara,
+    "mlym”: function (input) {
         var endM = /\Bm\b/gm
         return input.replace(endM, "M");
     }
