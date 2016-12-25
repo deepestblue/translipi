@@ -40,7 +40,7 @@
         <option value="gran">Grantha
         <option value="knda">Kannada
         <option value="mlym">Malayalam
-        <option value="latn" selected>Roman
+        <option value="latn" selected>Roman (ISO-15919)
         <option value="taml">Tamil
         <option value="telu">Telugu
     </select>
