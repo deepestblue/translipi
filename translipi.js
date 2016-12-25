@@ -280,7 +280,7 @@ function transliterate(input) {
         if (current == "") j = 1;
 
         //2. Match with syntax and take appropriate action
-        if (chosenLipi == "en") {
+        if (chosenLipi == "latn") {
             if (current) output += tab[current];
             else output += input.substr(i,j);
         }
@@ -302,7 +302,7 @@ function transliterate(input) {
     }
     while(i < input.length);
 
-    if(chosenLipi != "en" && isConsonant(previous))
+    if(chosenLipi != "latn" && isConsonant(previous))
         output += tab["V$"];
 
     return output;
@@ -342,7 +342,7 @@ function pingTranslipiWidget() {
     try {
         getTranslipiWidget().postMessage(new translipi.Message("ScriptChoiceRequest", ""), '*');
     } catch (e) {
-        translipi.main("en");
+        translipi.main("latn");
         console.log(e);
     }
 };
