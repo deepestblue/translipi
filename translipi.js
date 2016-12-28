@@ -294,6 +294,8 @@ function transliterateISO15919ToHK(inputText) {
         function(match) {
             return ISO15919ToHKmap[match]
         });
+
+    return outputText;
 }
 
 function transliterateToHK(inputText, inputScript) {
