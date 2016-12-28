@@ -1,4 +1,4 @@
-LIPI_DEFAULT = "latn";
+LIPI_DEFAULT = "latn-iso15919";
 LIPI_COOKIE = "lipiChosen";
 LIPI_EXPIRY = 30 * 24 * 3600 * 1000;  // 30 days
 
@@ -128,7 +128,7 @@ var kannada = {
     "au": "ಔ", "z": "ಶ", "'": "ಽ"
 };
 
-var roman = {
+var romanISO15919 = {
     "a": "a", "A": "ā",
     "i": "i", "I": "ī",
     "u": "u", "U": "ū",
@@ -189,7 +189,7 @@ var tamil = {
 var scripts = {
     "deva" : devanagari,
     "gran" : grantha,
-    "latn" : roman,
+    "latn-iso15919" : romanISO15919,
     "knda" : kannada,
     "mlym" : malayalam,
     "taml" : tamil,
@@ -226,6 +226,10 @@ function isVowel(str) {
     return false;
 }
 
+function isLipiAlphabet(lipi) {
+    return lipi.startsWith("latn");
+}
+
 function nasalToAnuswara(input) {
     var reNasals = /(\BG(?=[^GJNnmaAiIuUReEoO]\B))|(\BJ(?=[^GJNnmaAiIuUReEoO]\B))|(\BN(?=[^GJNnmaAiIuUReEoO]\B))|(\Bn(?=[^nmNyraAiIuUReEoO]\B))|\Bm(?=[^nmyraAiIuUReEoO])|\Bm\b/gm
     return input.replace(reNasals, "M");
@@ -254,7 +258,57 @@ var preproc = {
     }
 }
 
-function transliterate(input) {
+var ISO15919ToHKmap = {
+    "a":"a", "ā":"A", "i":"i", "ī":"I", "u":"u", "ū":"U",
+    "r̥":"R", "r̥̄":"RR", "l̥":"lR", "l̥̄":"lRR",
+    "e":"e", "ē":"E", "ai":"ai", "o":"o", "ō":"O", "au":"au",
+    "ṁ":"M", "ḥ":"H",
+    "k":"k", "kh":"kh", "g":"g", "gh":"gh", "ṅ":"G",
+    "c":"c", "ch":"ch", "j":"j", "jh":"jh", "j":"J",
+    "ṭ":"T", "ṭh":"Th", "n":"D", "ḍh":"Dh", "ṇ":"N",
+    "ṯ":"rR", "ṉ":"nN",
+    "t":"t", "th":"th", "d":"d", "dh":"dh", "n":"n",
+    "p":"p", "ph":"ph", "b":"b", "bh":"bh", "m":"m",
+    "y":"y", "r":"r", "l":"l", "v":"v",
+    "ṛ":"zh", "ḷ":"L",
+    "ś":"z", "ṣ":"S", "s":"s", "h":"h",
+}
+
+if (!Object.keys) Object.keys = function(o) {
+  if (o !== Object(o))
+    throw new TypeError('Object.keys called on a non-object');
+  var k=[],p;
+  for (p in o) if (Object.prototype.hasOwnProperty.call(o,p)) k.push(p);
+  return k;
+}
+
+function transliterateISO15919ToHK(inputText) {
+    var sorted matches = Object.keys(ISO15919ToHKmap)
+            .sort(function(a, b){return b.length - a.length;});
+    var regex = new Regexp(matches.join("|"), 'g');
+
+    // Ugh. IE doesn't have Unicode normalisation support, but all other browsers do
+    if (String.prototype.normalize) {
+        inputText = inputText.normalize('NFD');
+    }
+    var outputText = inputText.replace(regex,
+        function(match) {
+            return ISO15919ToHKmap[match]
+        });
+}
+
+function transliterateToHK(inputText, inputScript) {
+    inputScript = inputScript || "latn-hk";
+    if (inputScript == "latn-hk")
+        return inputText;
+
+    if (inputScript == "latn-iso15919")
+        return transliterateISO15919ToHK(inputText);
+
+    throw "Unknown input script";
+}
+
+function transliterateFromHK(input) {
     var i=0, j;
     var output="", current="", previous="";
     var tab = scripts[chosenLipi];
@@ -280,7 +334,7 @@ function transliterate(input) {
         if (current == "") j = 1;
 
         //2. Match with syntax and take appropriate action
-        if (chosenLipi == "latn") {
+        if (isLipiAlphabet(chosenLipi)) {
             if (current) output += tab[current];
             else output += input.substr(i,j);
         }
@@ -302,7 +356,7 @@ function transliterate(input) {
     }
     while(i < input.length);
 
-    if(chosenLipi != "latn" && isConsonant(previous))
+    if(! isLipiAlphabet(chosenLipi) && isConsonant(previous))
         output += tab["V$"];
 
     return output;
@@ -310,12 +364,16 @@ function transliterate(input) {
 
 function initLipis(node) {
     if (!lipiElementsSaved) lipiSubtrees.push(node);
-        // Traverse lipi subtree and save original content
+    // Traverse lipi subtree and save original content
+    var inputScript = node.getAttribute("input");
     traverseTree(node, function (n) {
             return (n.nodeType == 3 && !n.hasChildNodes());
         }, function(n) {
-            if (!lipiElementsSaved)  n.tlOrig = n.nodeValue;
-            n.nodeValue = transliterate(n.tlOrig);
+            if (!lipiElementsSaved) {
+                n.tlHK = n.nodeValue;
+                n.tlHK = transliterateToHK(n.tlHK, inputScript);
+            }
+            n.nodeValue = transliterateFromHK(n.tlHK);
         });
 }
 
@@ -342,7 +400,7 @@ function pingTranslipiWidget() {
     try {
         getTranslipiWidget().postMessage(new translipi.Message("ScriptChoiceRequest", ""), '*');
     } catch (e) {
-        translipi.main("latn");
+        translipi.main(LIPI_DEFAULT);
         console.log(e);
     }
 };
