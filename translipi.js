@@ -282,15 +282,15 @@ if (!Object.keys) Object.keys = function(o) {
 }
 
 function transliterateISO15919ToHK(inputText) {
-    var sorted matches = Object.keys(ISO15919ToHKmap)
+    var sortedMatches = Object.keys(ISO15919ToHKmap)
             .sort(function(a, b){return b.length - a.length;});
-    var regex = new Regexp(matches.join("|"), 'g');
+    var regexp = new Regexp(sortedMatches.join("|"), 'g');
 
     // Ugh. IE doesn't have Unicode normalisation support, but all other browsers do
     if (String.prototype.normalize) {
         inputText = inputText.normalize('NFD');
     }
-    var outputText = inputText.replace(regex,
+    var outputText = inputText.replace(regexp,
         function(match) {
             return ISO15919ToHKmap[match]
         });
