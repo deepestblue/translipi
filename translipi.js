@@ -263,7 +263,7 @@ var ISO15919ToHKmap = {
     "e":"e", "ē":"E", "ai":"ai", "o":"o", "ō":"O", "au":"au",
     "ṁ":"M", "ḥ":"H",
     "k":"k", "kh":"kh", "g":"g", "gh":"gh", "ṅ":"G",
-    "c":"c", "ch":"ch", "j":"j", "jh":"jh", "j":"J",
+    "c":"c", "ch":"ch", "j":"j", "jh":"jh", "ñ":"J",
     "ṭ":"T", "ṭh":"Th", "n":"D", "ḍh":"Dh", "ṇ":"N",
     "ṯ":"rR", "ṉ":"nN",
     "t":"t", "th":"th", "d":"d", "dh":"dh", "n":"n",
