@@ -61,7 +61,6 @@ function traverseTree(node, cond, proc) {
 }
 
 /*---- Transliteration ---- */
-var lipiSubtrees = [];
 var lipiElementsSaved = false;
 
 var devanagari = {
@@ -155,7 +154,7 @@ var roman = {
     "V$": "", "f": "f", "Z": "z"
 };
 
-malayalam = {
+var malayalam = {
     "O$": "", "ch": "ഛ", "zh": "ഴ", "jh": "ഝ", "ai": "ഐ", "j": "ജ", "lRR$": "ൄ",
     "'": "ഽ", "lRR": "ൡ", "lR": "ഌ", "Th": "ഠ", "U$": "ൂ", "A$": "ാ", "gh": "ഘ",
     "Z": "ജ", "bh": "ഭ", "dh": "ധ", "RR": "ൠ", "E$": "േ", "o$": "ൊ", "th": "ഥ",
@@ -309,8 +308,7 @@ function transliterate(input) {
 }
 
 function initLipis(node) {
-    if (!lipiElementsSaved) lipiSubtrees.push(node);
-        // Traverse lipi subtree and save original content
+    // Traverse lipi subtree and save original content
     traverseTree(node, function (n) {
             return (n.nodeType == 3 && !n.hasChildNodes());
         }, function(n) {
