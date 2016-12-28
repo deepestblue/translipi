@@ -284,7 +284,7 @@ if (!Object.keys) Object.keys = function(o) {
 function transliterateISO15919ToHK(inputText) {
     var sortedMatches = Object.keys(ISO15919ToHKmap)
             .sort(function(a, b){return b.length - a.length;});
-    var regexp = new Regexp(sortedMatches.join("|"), 'g');
+    var regexp = new RegExp(sortedMatches.join("|"), 'g');
 
     // Ugh. IE doesn't have Unicode normalisation support, but all other browsers do
     if (String.prototype.normalize) {
