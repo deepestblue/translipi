@@ -287,10 +287,6 @@ function transliterateISO15919ToHK(inputText) {
             .sort(function(a, b){return b.length - a.length;});
     var regexp = new RegExp(sortedMatches.join("|"), 'g');
 
-    // Ugh. IE doesn't have Unicode normalisation support, but all other browsers do
-    if (String.prototype.normalize) {
-        inputText = inputText.normalize('NFD');
-    }
     var outputText = inputText.replace(regexp,
         function(match) {
             return ISO15919ToHKmap[match]
